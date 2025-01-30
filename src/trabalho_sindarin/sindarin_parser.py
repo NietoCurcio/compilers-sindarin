@@ -3,6 +3,11 @@ from anytree import Node, RenderTree
 
 from .sindarin_lexer import tokens
 
+# ✅ FIX: Define precedence to resolve shift/reduce conflict
+precedence = (
+    ("left", "CONJUNCTION"),  # Process conjunctions last (lowest precedence)
+)
+
 # === Grammar Rules ===
 
 
@@ -23,7 +28,6 @@ def p_sentence_noun_verb(p):
     )
 
 
-# ✅ FIX: Use `prepositional_phrase`
 def p_sentence_noun_verb_prep_noun(p):
     """sentence : ARTICLE NOUN VERB prepositional_phrase"""
     p[0] = Node(
@@ -45,7 +49,7 @@ def p_prepositional_phrase(p):
     )
 
 
-# ✅ Ensure conjunctions still work
+# ✅ FIX: Ensure conjunctions are parsed **after** complete sentences
 def p_sentence_conjunction(p):
     """sentence : sentence CONJUNCTION sentence"""
     p[0] = Node(
