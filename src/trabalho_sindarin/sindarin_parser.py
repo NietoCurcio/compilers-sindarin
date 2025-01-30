@@ -23,34 +23,16 @@ def p_sentence_noun_verb(p):
     )
 
 
+# ✅ FIX: Use `prepositional_phrase`
 def p_sentence_noun_verb_prep_noun(p):
-    """sentence : ARTICLE NOUN VERB PREPOSITION ARTICLE NOUN"""
+    """sentence : ARTICLE NOUN VERB prepositional_phrase"""
     p[0] = Node(
         "S",
         children=[
             Node("A", children=[Node(p[1])]),
             Node("N", children=[Node(p[2])]),
             Node("V", children=[Node(p[3])]),
-            Node(
-                "P",
-                children=[
-                    Node(p[4]),  # Preposition (na, o)
-                    Node("A", children=[Node(p[5])]),  # Article (i, in)
-                    Node("N", children=[Node(p[6])]),  # Noun (galad, adar)
-                ],
-            ),
-        ],
-    )
-
-
-# ✅ New Rule: Allow multiple sentences joined by "a" (Conjunction)
-def p_sentence_conjunction(p):
-    """sentence : sentence CONJUNCTION sentence"""
-    p[0] = Node(
-        "S",
-        children=[
-            p[1],  # First sentence
-            Node("C", children=[Node(p[2]), p[3]]),  # Conjunction with second sentence
+            p[4],  # Attach the prepositional phrase node
         ],
     )
 
@@ -60,6 +42,18 @@ def p_prepositional_phrase(p):
     p[0] = Node(
         "P",
         children=[Node(p[1]), Node("A", children=[Node(p[2])]), Node("N", children=[Node(p[3])])],
+    )
+
+
+# ✅ Ensure conjunctions still work
+def p_sentence_conjunction(p):
+    """sentence : sentence CONJUNCTION sentence"""
+    p[0] = Node(
+        "S",
+        children=[
+            p[1],  # First sentence
+            Node("C", children=[Node(p[2]), p[3]]),  # Conjunction with second sentence
+        ],
     )
 
 
@@ -84,9 +78,6 @@ if __name__ == "__main__":
         try:
             s = input("Sindarin > ")
         except EOFError:
-            break
-        except KeyboardInterrupt:
-            print("\nExiting")
             break
         if not s:
             continue
