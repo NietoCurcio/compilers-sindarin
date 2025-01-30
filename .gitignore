@@ -1,0 +1,7 @@
+__pycache__
+
+src/trabalho_sindarin/parser.out
+src/trabalho_sindarin/parsetab.py
+
+*.pdf
+*.png
