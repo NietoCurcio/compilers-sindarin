@@ -65,16 +65,12 @@ python -m trabalho_sindarin.show_tree
         <td>Basic sentence with subject and verb (e.g., "i adar nor" → "the father runs")</td>
     </tr>
     <tr>
-        <td><code>sentence → ARTICLE NOUN VERB PREPOSITION ARTICLE NOUN</code></td>
+        <td><code>sentence → ARTICLE NOUN VERB prepositional_phrase</code></td>
         <td>Sentence with a prepositional phrase (e.g., "i adar nor na i galad" → "the father runs to the light")</td>
     </tr>
     <tr>
         <td><code>prepositional_phrase → PREPOSITION ARTICLE NOUN</code></td>
         <td>Prepositional phrase (e.g., "na i galad" → "to the light")</td>
-    </tr>
-    <tr>
-        <td><code>sentence → ARTICLE NOUN VERB prepositional_phrase</code></td>
-        <td>Sentence with a nested prepositional phrase (e.g., "i adar nor na i galad")</td>
     </tr>
     <tr>
         <td><code>ARTICLE → i | in</code></td>
