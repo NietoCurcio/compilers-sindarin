@@ -85,6 +85,9 @@ if __name__ == "__main__":
             s = input("Sindarin > ")
         except EOFError:
             break
+        except KeyboardInterrupt:
+            print("\nExiting")
+            break
         if not s:
             continue
         print("\nParse Tree:")
