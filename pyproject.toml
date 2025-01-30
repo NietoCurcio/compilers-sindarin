@@ -9,6 +9,7 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "anytree>=2.12.1",
+    "graphviz>=0.20.3",
     "ply>=3.11",
 ]
 

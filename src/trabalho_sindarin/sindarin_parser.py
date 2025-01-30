@@ -1,5 +1,6 @@
 import ply.yacc as yacc
 from anytree import Node, RenderTree
+from graphviz import Digraph
 
 from .sindarin_lexer import tokens
 
@@ -49,7 +50,7 @@ def p_prepositional_phrase(p):
     )
 
 
-# ✅ FIX: Ensure conjunctions are parsed **after** complete sentences
+# ✅ Ensure conjunctions are parsed **after** complete sentences
 def p_sentence_conjunction(p):
     """sentence : sentence CONJUNCTION sentence"""
     p[0] = Node(
@@ -68,13 +69,35 @@ def p_error(p):
 parser = yacc.yacc()
 
 
-# === Function to Display Parse Tree ===
+# === Function to Display Parse Tree with Graphviz ===
+def visualize_tree(root, filename="parse_tree"):
+    """Generates a visual tree using Graphviz"""
+    dot = Digraph(format="png")
+
+    def add_nodes_edges(node, parent_id=None):
+        node_id = str(id(node))
+        dot.node(node_id, node.name)  # Create node
+
+        if parent_id:
+            dot.edge(parent_id, node_id)  # Link nodes
+
+        for child in node.children:
+            add_nodes_edges(child, node_id)
+
+    add_nodes_edges(root)  # Start recursion
+    filepath = dot.render(filename)
+    print(f"Tree visualization saved as {filepath}")
+
+
 def parse_and_show_tree(sentence):
     result = parser.parse(sentence)
 
     if result:
+        print("\nParse Tree (Text Representation):")
         for pre, _, node in RenderTree(result):
             print("%s%s" % (pre, node.name))
+
+        visualize_tree(result)  # Generate graphical visualization
 
 
 if __name__ == "__main__":
@@ -85,5 +108,4 @@ if __name__ == "__main__":
             break
         if not s:
             continue
-        print("\nParse Tree:")
         parse_and_show_tree(s)
