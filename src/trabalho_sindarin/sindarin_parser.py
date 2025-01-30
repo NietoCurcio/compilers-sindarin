@@ -23,6 +23,7 @@ def p_sentence_noun_verb(p):
     )
 
 
+# ✅ FIX: Allow verb phrases to include a prepositional phrase
 def p_sentence_noun_verb_prep_noun(p):
     """sentence : ARTICLE NOUN VERB PREPOSITION ARTICLE NOUN"""
     p[0] = Node(
@@ -34,14 +35,9 @@ def p_sentence_noun_verb_prep_noun(p):
             Node(
                 "P",
                 children=[
-                    Node(p[4]),
-                    Node(
-                        "S",
-                        children=[
-                            Node("A", children=[Node(p[5])]),
-                            Node("N", children=[Node(p[6])]),
-                        ],
-                    ),
+                    Node(p[4]),  # Preposition (na, o)
+                    Node("A", children=[Node(p[5])]),  # Article (i, in)
+                    Node("N", children=[Node(p[6])]),  # Noun (galad, adar)
                 ],
             ),
         ],
