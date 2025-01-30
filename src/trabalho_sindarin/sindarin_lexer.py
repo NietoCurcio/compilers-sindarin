@@ -1,6 +1,6 @@
 import ply.lex as lex
 
-tokens = ("ARTICLE", "NOUN", "VERB", "PREPOSITION")
+tokens = ("ARTICLE", "NOUN", "VERB", "PREPOSITION", "CONJUNCTION")
 
 # Dictionary for translation
 sindarin_dict = {
@@ -11,6 +11,7 @@ sindarin_dict = {
     "nor": "run",
     "galad": "light",
     "adar": "father",
+    "a": "and",  # Conjunction
 }
 
 
@@ -38,6 +39,12 @@ def t_NOUN(t):
     return t
 
 
+def t_CONJUNCTION(t):
+    r"a"
+    t.value = sindarin_dict[t.value]
+    return t
+
+
 t_ignore = " \t\n"
 
 
@@ -49,6 +56,6 @@ def t_error(t):
 lexer = lex.lex()
 
 if __name__ == "__main__":
-    lexer.input("i galad nor na adar")
+    lexer.input("i adar nor na i galad a i galad nor")
     for tok in lexer:
         print(tok)

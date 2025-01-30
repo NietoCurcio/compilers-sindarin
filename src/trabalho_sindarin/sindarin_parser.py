@@ -23,7 +23,6 @@ def p_sentence_noun_verb(p):
     )
 
 
-# ✅ FIX: Allow verb phrases to include a prepositional phrase
 def p_sentence_noun_verb_prep_noun(p):
     """sentence : ARTICLE NOUN VERB PREPOSITION ARTICLE NOUN"""
     p[0] = Node(
@@ -41,6 +40,26 @@ def p_sentence_noun_verb_prep_noun(p):
                 ],
             ),
         ],
+    )
+
+
+# ✅ New Rule: Allow multiple sentences joined by "a" (Conjunction)
+def p_sentence_conjunction(p):
+    """sentence : sentence CONJUNCTION sentence"""
+    p[0] = Node(
+        "S",
+        children=[
+            p[1],  # First sentence
+            Node("C", children=[Node(p[2]), p[3]]),  # Conjunction with second sentence
+        ],
+    )
+
+
+def p_prepositional_phrase(p):
+    """prepositional_phrase : PREPOSITION ARTICLE NOUN"""
+    p[0] = Node(
+        "P",
+        children=[Node(p[1]), Node("A", children=[Node(p[2])]), Node("N", children=[Node(p[3])])],
     )
 
 
