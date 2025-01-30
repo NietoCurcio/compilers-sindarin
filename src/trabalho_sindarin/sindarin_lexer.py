@@ -1,52 +1,54 @@
 import ply.lex as lex
 
-# Define tokens
-tokens = ("WORD", "ARTICLE", "PREPOSITION")
+tokens = ("ARTICLE", "NOUN", "VERB", "PREPOSITION")
 
-# Simple Sindarin-to-English dictionary
+# Dictionary for translation
 sindarin_dict = {
     "i": "the",
+    "in": "the (plural)",
     "na": "to",
-    "ed": "out of",
-    "gwaen": "I go",
+    "o": "from",
+    "nor": "run",
     "galad": "light",
+    "adar": "father",
 }
 
 
-# Token rules
 def t_ARTICLE(t):
-    r"i"
-    t.value = sindarin_dict.get(t.value, t.value)
+    r"i|in"
+    t.value = sindarin_dict[t.value]
     return t
 
 
 def t_PREPOSITION(t):
-    r"na|ed"
-    t.value = sindarin_dict.get(t.value, t.value)
+    r"na|o"
+    t.value = sindarin_dict[t.value]
     return t
 
 
-def t_WORD(t):
-    r"[a-zA-Z]+"
-    t.value = sindarin_dict.get(t.value, t.value)
+def t_VERB(t):
+    r"nor"
+    t.value = sindarin_dict[t.value]
     return t
 
 
-# Ignore spaces and newlines
+def t_NOUN(t):
+    r"galad|adar"
+    t.value = sindarin_dict[t.value]
+    return t
+
+
 t_ignore = " \t\n"
 
 
-# Error handling
 def t_error(t):
     print(f"Illegal character '{t.value[0]}'")
     t.lexer.skip(1)
 
 
-# Build the lexer
 lexer = lex.lex()
 
-# Test
 if __name__ == "__main__":
-    lexer.input("i na galad gwaen")
+    lexer.input("i galad nor na adar")
     for tok in lexer:
         print(tok)
