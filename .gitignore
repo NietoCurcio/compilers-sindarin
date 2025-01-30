@@ -5,3 +5,5 @@ src/trabalho_sindarin/parsetab.py
 
 *.pdf
 *.png
+
+parse_tree
