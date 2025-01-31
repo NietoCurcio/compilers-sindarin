@@ -11,6 +11,9 @@ sindarin_dict = {
     "nor": "run",
     "galad": "light",
     "adar": "father",
+    "arwen": "Arwen",
+    "valinor": "Valinor",
+    "edhel": "elf",
     "a": "and",  # Conjunction
 }
 
@@ -34,7 +37,7 @@ def t_VERB(t):
 
 
 def t_NOUN(t):
-    r"galad|adar"
+    r"galad|adar|arwen|valinor|edhel"
     t.value = sindarin_dict[t.value]
     return t
 
@@ -56,6 +59,6 @@ def t_error(t):
 lexer = lex.lex()
 
 if __name__ == "__main__":
-    lexer.input("i adar nor na i galad a i galad nor")
+    lexer.input("i arwen nor o i valinor")
     for tok in lexer:
         print(tok)
