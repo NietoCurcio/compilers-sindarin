@@ -4,6 +4,12 @@ Running:
 python -m trabalho_sindarin.sindarin_parser
 ```
 
+```sh
+python -m trabalho_sindarin.sindarin_lexer
+```
+
+
+
 <table border="1">
     <tr>
         <th>PRODUCTION</th>
@@ -73,3 +79,8 @@ python -m trabalho_sindarin.sindarin_parser
 Example tree:
 
 <img src="parse_tree.png" alt="Example Tree" width="800"/>
+
+Sentences examples:
+```sh
+i adar nor na i galad a i galad nor
+```

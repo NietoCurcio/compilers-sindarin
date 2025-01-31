@@ -1,19 +1,20 @@
 import ply.yacc as yacc
 from anytree import Node, RenderTree
+from anytree.exporter import DotExporter
 from graphviz import Digraph
+from ply.yacc import YaccProduction
 
+from .sindarin_dict import sindarin_dict
 from .sindarin_lexer import tokens
 
-# ✅ FIX: Define precedence to resolve shift/reduce conflict
-precedence = (
-    ("left", "CONJUNCTION"),  # Process conjunctions last (lowest precedence)
-)
-
-# === Grammar Rules ===
+precedence = (("left", "CONJUNCTION"),)
 
 
-def p_sentence_simple(p):
+def p_sentence_simple(p: YaccProduction):
     """sentence : ARTICLE NOUN"""
+    print("oi")
+    print(p)
+    print(type(p))
     p[0] = Node("S", children=[Node("A", children=[Node(p[1])]), Node("N", children=[Node(p[2])])])
 
 
@@ -42,7 +43,7 @@ def p_sentence_noun_verb_prep_noun(p):
     )
 
 
-def p_prepositional_phrase(p):
+def p_prepositional_phrase(p: YaccProduction):
     """prepositional_phrase : PREPOSITION ARTICLE NOUN"""
     p[0] = Node(
         "P",
@@ -50,8 +51,7 @@ def p_prepositional_phrase(p):
     )
 
 
-# ✅ Ensure conjunctions are parsed **after** complete sentences
-def p_sentence_conjunction(p):
+def p_sentence_conjunction(p: YaccProduction):
     """sentence : sentence CONJUNCTION sentence"""
     p[0] = Node(
         "S",
@@ -62,42 +62,67 @@ def p_sentence_conjunction(p):
     )
 
 
-def p_error(p):
+def p_error(p: YaccProduction):
     print("Syntax error in input!")
 
 
 parser = yacc.yacc()
 
 
-# === Function to Display Parse Tree with Graphviz ===
-def visualize_tree(root, filename="parse_tree"):
-    """Generates a visual tree using Graphviz"""
+def visualize_tree(root, show_elvish=False):
     dot = Digraph(format="png")
+
+    elvish_dict = {value: key for key, value in sindarin_dict.items()}
 
     def add_nodes_edges(node, parent_id=None):
         node_id = str(id(node))
-        dot.node(node_id, node.name)  # Create node
+
+        # ✅ If show_elvish=True, display both Elvish and English for leaves
+        if show_elvish and not node.children:
+            elvish_word = node.name
+            english_word = elvish_dict.get(elvish_word, elvish_word)
+
+            # Create Elvish leaf node
+            dot.node(node_id, elvish_word, shape="ellipse", color="blue")
+
+            # Create an extra node for the English translation
+            english_id = node_id + "_eng"
+            dot.node(english_id, english_word, shape="rectangle", color="green")
+
+            # Link Elvish word to English translation
+            dot.edge(node_id, english_id, style="dashed", color="gray")
+        else:
+            dot.node(node_id, node.name)  # Standard behavior
 
         if parent_id:
-            dot.edge(parent_id, node_id)  # Link nodes
+            dot.edge(parent_id, node_id)  # Link nodes in the tree
 
         for child in node.children:
             add_nodes_edges(child, node_id)
 
-    add_nodes_edges(root)  # Start recursion
-    filepath = dot.render(filename)
-    print(f"Tree visualization saved as {filepath}")
+    # def add_nodes_edges(node: Node):
+    #     node_id = str(id(node))
+    #     dot.node(node_id, node.name)
+    #     for child in node.children:
+    #         dot.edge(node_id, str(id(child)))
+    #         add_nodes_edges(child)
+
+    add_nodes_edges(root)
+    filepath = dot.render("tree_visualization_manual")
+    print(f"Tree visualizations saved as {filepath} and tree_visualization_sentence.png")
 
 
-def parse_and_show_tree(sentence):
+def parse_and_show_tree(sentence, show_elvish=False):
     result = parser.parse(sentence)
 
-    if result:
-        print("\nParse Tree (Text Representation):")
-        for pre, _, node in RenderTree(result):
-            print("%s%s" % (pre, node.name))
+    if result is None:
+        return
 
-        visualize_tree(result)  # Generate graphical visualization
+    print("\nParse Tree (Text Representation):")
+    for pre, _, node in RenderTree(result):
+        print(f"{pre}{node.name}")
+
+    visualize_tree(result, show_elvish=show_elvish)
 
 
 if __name__ == "__main__":
@@ -106,6 +131,9 @@ if __name__ == "__main__":
             s = input("Sindarin > ")
         except EOFError:
             break
+        except KeyboardInterrupt:
+            print()
+            break
         if not s:
             continue
-        parse_and_show_tree(s)
+        parse_and_show_tree(s, show_elvish=True)
