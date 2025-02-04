@@ -8,8 +8,6 @@ python -m trabalho_sindarin.sindarin_parser
 python -m trabalho_sindarin.sindarin_lexer
 ```
 
-
-
 <table border="1">
     <tr>
         <th>PRODUCTION</th>
@@ -76,11 +74,11 @@ python -m trabalho_sindarin.sindarin_lexer
 </table>
 
 
-Example tree:
-
-<img src="parse_tree.png" alt="Example Tree" width="800"/>
-
 Sentences examples:
 ```sh
+i adar nor na i galad
+i adar nor o i galad
 i adar nor na i galad a i galad nor
+
+i arwen nor na i edhel a i edhel nor na i valinor
 ```

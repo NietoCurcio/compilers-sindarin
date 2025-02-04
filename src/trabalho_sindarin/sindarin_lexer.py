@@ -34,6 +34,8 @@ def t_PREPOSITION(t: LexToken) -> LexToken:
 
 def t_VERB(t: LexToken) -> LexToken:
     r"nor"
+    # noro
+    # norn
     t.value = sindarin_dict[t.value]
     return t
 

@@ -7,3 +7,6 @@ src/trabalho_sindarin/parsetab.py
 *.png
 
 parse_tree
+
+tree_visualization_sentence
+manual_tree_visualization

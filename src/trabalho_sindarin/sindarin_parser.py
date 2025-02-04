@@ -77,25 +77,21 @@ def visualize_tree(root, show_elvish=False):
     def add_nodes_edges(node, parent_id=None):
         node_id = str(id(node))
 
-        # ✅ If show_elvish=True, display both Elvish and English for leaves
         if show_elvish and not node.children:
-            elvish_word = node.name
-            english_word = elvish_dict.get(elvish_word, elvish_word)
+            english_word = node.name
+            elvish_word = elvish_dict.get(english_word)
 
-            # Create Elvish leaf node
             dot.node(node_id, elvish_word, shape="ellipse", color="blue")
 
-            # Create an extra node for the English translation
             english_id = node_id + "_eng"
             dot.node(english_id, english_word, shape="rectangle", color="green")
 
-            # Link Elvish word to English translation
             dot.edge(node_id, english_id, style="dashed", color="gray")
         else:
-            dot.node(node_id, node.name)  # Standard behavior
+            dot.node(node_id, node.name)
 
         if parent_id:
-            dot.edge(parent_id, node_id)  # Link nodes in the tree
+            dot.edge(parent_id, node_id)
 
         for child in node.children:
             add_nodes_edges(child, node_id)
@@ -108,7 +104,7 @@ def visualize_tree(root, show_elvish=False):
     #         add_nodes_edges(child)
 
     add_nodes_edges(root)
-    filepath = dot.render("tree_visualization_manual")
+    filepath = dot.render("tree_visualization_sentence")
     print(f"Tree visualizations saved as {filepath} and tree_visualization_sentence.png")
 
 
