@@ -12,9 +12,6 @@ precedence = (("left", "CONJUNCTION"),)
 
 def p_sentence_simple(p: YaccProduction):
     """sentence : ARTICLE NOUN"""
-    print("oi")
-    print(p)
-    print(type(p))
     p[0] = Node("S", children=[Node("A", children=[Node(p[1])]), Node("N", children=[Node(p[2])])])
 
 
@@ -38,7 +35,7 @@ def p_sentence_noun_verb_prep_noun(p):
             Node("A", children=[Node(p[1])]),
             Node("N", children=[Node(p[2])]),
             Node("V", children=[Node(p[3])]),
-            p[4],  # Attach the prepositional phrase node
+            p[4],
         ],
     )
 
@@ -56,8 +53,8 @@ def p_sentence_conjunction(p: YaccProduction):
     p[0] = Node(
         "S",
         children=[
-            p[1],  # First sentence
-            Node("C", children=[Node(p[2]), p[3]]),  # Conjunction with second sentence
+            p[1],
+            Node("C", children=[Node(p[2]), p[3]]),
         ],
     )
 
